@@ -1,0 +1,33 @@
+FUNCTION ZFI_RECONFIG_SUMATORIA_3.
+*"----------------------------------------------------------------------
+*"*"Interfase local
+*"  IMPORTING
+*"     REFERENCE(REPORT_INPUT) TYPE  ZFI_EGRESOS_OUTPUTT
+*"  EXPORTING
+*"     REFERENCE(REPORT_OUTPUT) TYPE  ZFI_EGRESOS_OUTPUTT
+*"----------------------------------------------------------------------
+  TYPES:BEGIN OF TY_PAGO,
+          BUKRS	TYPE BUKRS,
+          BELNR	TYPE BELNR_D,
+          GJAHR	TYPE GJAHR,
+        END OF TY_PAGO.
+
+  DATA: IT_PAGO       TYPE STANDARD TABLE OF TY_PAGO,
+        IW_PAGO       TYPE TY_PAGO,
+        IT_REPORT_AUX TYPE STANDARD TABLE OF ZFI_EGRESOS_OUTPUT.
+
+
+  DATA: WA_REPORTT TYPE ZFI_EGRESOS_OUTPUT.
+
+  LOOP AT REPORT_INPUT INTO DATA(WA_REPORT)
+    GROUP BY (
+              IND_IVA_16  = WA_REPORT-IND_IVA_16
+              INDI_IVA_8  = WA_REPORT-INDI_IVA_8
+              IND_IVA_0   = WA_REPORT-IND_IVA_0
+              IND_EXENTO  = WA_REPORT-IND_EXENTO
+              IND_NODEDU  = WA_REPORT-IND_NODEDU
+              IND_NO_OBJ  = WA_REPORT-IND_NO_OBJ ).
+    sort IT_REPORT_AUX.
+    COLLECT WA_REPORT INTO IT_REPORT_AUX.
+  ENDLOOP.
+ENDFUNCTION.
